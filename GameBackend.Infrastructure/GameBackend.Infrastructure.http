@@ -1,0 +1,6 @@
+@GameBackend.Infrastructure_HostAddress = http://localhost:5140
+
+GET {{GameBackend.Infrastructure_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
