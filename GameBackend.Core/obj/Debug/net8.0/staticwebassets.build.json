@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "AWCVzAohCCWF+ik4HgcQTuthzSGUi3haw+nqJsyavV8=",
+  "Source": "GameBackend.Core",
+  "BasePath": "_content/GameBackend.Core",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

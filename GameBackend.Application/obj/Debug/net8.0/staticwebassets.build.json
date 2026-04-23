@@ -1,0 +1,23 @@
+{
+  "Version": 1,
+  "Hash": "L3f7N0D5zKIfJXbr1zEtar7W33yBndAWkMuiADty8Xg=",
+  "Source": "GameBackend.Application",
+  "BasePath": "_content/GameBackend.Application",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\faiza\\RiderProjects\\GameBackend\\GameBackend.Core\\GameBackend.Core.csproj",
+      "Version": 2,
+      "Source": "GameBackend.Core",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
