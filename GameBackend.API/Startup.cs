@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using GameBackend.Application.UseCases.Auth;
+using GameBackend.Application.UseCases.Players;
 using GameBackend.Core.Interfaces;
 using GameBackend.Infrastructure.Persistence;
 using GameBackend.Infrastructure.Repositories;
@@ -37,6 +38,8 @@ public class Startup
         // Use Cases
         services.AddScoped<RegisterPlayerUseCase>();
         services.AddScoped<LoginUseCase>();
+        services.AddScoped<GetPlayerProfileUseCase>();
+        services.AddScoped<UpdatePlayerProfileUseCase>();
 
         // JWT Authentication
         var jwtKey = Configuration["Jwt:Key"]!;
@@ -48,6 +51,7 @@ public class Startup
             })
             .AddJwtBearer(options =>
             {
+                options.UseSecurityTokenValidators = true;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -58,7 +62,16 @@ public class Startup
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtKey))
+                        Encoding.UTF8.GetBytes(jwtKey)),
+                    ClockSkew = TimeSpan.Zero
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("JWT Token validated successfully");
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

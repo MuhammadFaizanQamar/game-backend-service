@@ -6,12 +6,14 @@ namespace GameBackend.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController : ControllerBase
+public class AuthController : PlayerControllerBase
 {
     private readonly RegisterPlayerUseCase _registerUseCase;
     private readonly LoginUseCase _loginUseCase;
 
-    public AuthController(RegisterPlayerUseCase registerUseCase, LoginUseCase loginUseCase)
+    public AuthController(
+        RegisterPlayerUseCase registerUseCase,
+        LoginUseCase loginUseCase)
     {
         _registerUseCase = registerUseCase;
         _loginUseCase = loginUseCase;
@@ -27,7 +29,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new { error = ex.Message });
+            return HandleError(ex);
         }
     }
 
@@ -41,7 +43,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            return Unauthorized(new { error = ex.Message });
+            return HandleError(ex, 401);
         }
     }
 }
