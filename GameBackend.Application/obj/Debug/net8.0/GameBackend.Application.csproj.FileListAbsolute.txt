@@ -1,8 +1,6 @@
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\GameBackend.Core.deps.json
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\GameBackend.Core.runtimeconfig.json
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\GameBackend.Core.exe
-C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\appsettings.Development.json
-C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\appsettings.json
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\GameBackend.Application.exe
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\GameBackend.Application.deps.json
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\GameBackend.Application.runtimeconfig.json
