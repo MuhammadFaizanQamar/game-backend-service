@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Caujmfsp34lQCIif63VPlrztmiUM6F6yk50gKvj79K4=",
+  "Hash": "L3f7N0D5zKIfJXbr1zEtar7W33yBndAWkMuiADty8Xg=",
   "Source": "GameBackend.Application",
   "BasePath": "_content/GameBackend.Application",
   "Mode": "Default",
@@ -11,10 +11,10 @@
       "Version": 2,
       "Source": "GameBackend.Core",
       "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishProperties": "",
       "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
       "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildProperties": "",
       "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
     }
   ],

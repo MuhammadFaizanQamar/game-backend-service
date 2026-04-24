@@ -72,3 +72,5 @@ C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\obj\Debug\net8.0\refi
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\obj\Debug\net8.0\GameBackend.Tests.pdb
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\obj\Debug\net8.0\GameBackend.Tests.genruntimeconfig.cache
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\obj\Debug\net8.0\ref\GameBackend.Tests.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\StackExchange.Redis.dll

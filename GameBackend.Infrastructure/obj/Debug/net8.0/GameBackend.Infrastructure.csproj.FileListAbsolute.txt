@@ -126,3 +126,5 @@ C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Infrastructure\obj\Debug\ne
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Infrastructure\obj\Debug\net8.0\GameBackend.Infrastructure.pdb
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Infrastructure\obj\Debug\net8.0\GameBackend.Infrastructure.genruntimeconfig.cache
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Infrastructure\obj\Debug\net8.0\ref\GameBackend.Infrastructure.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Infrastructure\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Infrastructure\bin\Debug\net8.0\StackExchange.Redis.dll

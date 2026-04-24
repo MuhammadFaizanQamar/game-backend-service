@@ -9,5 +9,5 @@ public class Player
     public string AvatarUrl { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime LastSeenAt { get; set; }
-    public Dictionary<string, object> Metadata { get; set; } = new();
+    public string Metadata { get; set; } = "{}";
 }

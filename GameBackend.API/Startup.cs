@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using GameBackend.Application.UseCases.Auth;
 using GameBackend.Application.UseCases.Leaderboards;
 using GameBackend.Application.UseCases.Players;
+using GameBackend.Application.UseCases.Sessions;
 using GameBackend.Core.Interfaces;
 using GameBackend.Infrastructure.Cache;
 using GameBackend.Infrastructure.Persistence;
@@ -44,6 +45,13 @@ public class Startup
             Token = Configuration["Redis:Token"]!
         };
         services.AddSingleton<ICacheService>(_ => new RedisCacheService(redisSettings));
+
+        // Sessions
+        services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<StartSessionUseCase>();
+        services.AddScoped<EndSessionUseCase>();
+        services.AddScoped<GetSessionHistoryUseCase>();
+        services.AddScoped<GetSessionStatsUseCase>();
 
         // Use Cases
         services.AddScoped<RegisterPlayerUseCase>();
