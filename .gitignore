@@ -485,3 +485,13 @@ $RECYCLE.BIN/
 
 # User secrets and local config
 **/appsettings.Development.json
+
+# JetBrains Rider / IntelliJ
+.idea/
+
+# Qoder (if generated locally)
+.qoder/
+
+# Optional (recommended for .NET)
+bin/
+obj/
