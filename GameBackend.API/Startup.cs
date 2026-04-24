@@ -28,7 +28,10 @@ public class Startup
     {
         // Database
         services.AddDbContext<GameDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(
+                Configuration.GetConnectionString("DefaultConnection"),
+                x => x.EnableRetryOnFailure()
+            ));
 
         // Repositories
         services.AddScoped<IPlayerRepository, PlayerRepository>();
@@ -128,13 +131,13 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        //if (env.IsDevelopment())
+        if (env.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-        app.UseRouting();
+        app.UseHttpsRedirection();
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
