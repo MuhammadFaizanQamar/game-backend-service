@@ -31,4 +31,16 @@ public class PlayerRepository : IPlayerRepository
         await _context.Players.AddAsync(player);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Player?> GetByIdAsync(Guid id)
+    {
+        return await _context.Players
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task UpdateAsync(Player player)
+    {
+        _context.Players.Update(player);
+        await _context.SaveChangesAsync();
+    }
 }

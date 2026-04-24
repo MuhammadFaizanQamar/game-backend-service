@@ -18,8 +18,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
     public string GenerateToken(Guid playerId, string username)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var securityKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(_settings.Key));
+        var credentials = new SigningCredentials(
+            securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {

@@ -1,8 +1,10 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using GameBackend.Application.UseCases.Auth;
+using GameBackend.Application.UseCases.Leaderboards;
 using GameBackend.Application.UseCases.Players;
 using GameBackend.Core.Interfaces;
+using GameBackend.Infrastructure.Cache;
 using GameBackend.Infrastructure.Persistence;
 using GameBackend.Infrastructure.Repositories;
 using GameBackend.Infrastructure.Security;
@@ -35,11 +37,25 @@ public class Startup
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
 
+        // Redis via Upstash REST API
+        var redisSettings = new RedisSettings
+        {
+            Url = Configuration["Redis:Url"]!,
+            Token = Configuration["Redis:Token"]!
+        };
+        services.AddSingleton<ICacheService>(_ => new RedisCacheService(redisSettings));
+
         // Use Cases
         services.AddScoped<RegisterPlayerUseCase>();
         services.AddScoped<LoginUseCase>();
         services.AddScoped<GetPlayerProfileUseCase>();
         services.AddScoped<UpdatePlayerProfileUseCase>();
+
+        // Leaderboard
+        services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
+        services.AddScoped<SubmitScoreUseCase>();
+        services.AddScoped<GetTopLeaderboardUseCase>();
+        services.AddScoped<GetPlayerRankUseCase>();
 
         // JWT Authentication
         var jwtKey = Configuration["Jwt:Key"]!;
@@ -83,7 +99,7 @@ public class Startup
                     .WithMethods("GET", "POST", "PUT", "DELETE")
                     .AllowAnyHeader()));
 
-        // Controllers with JSON options (inspired by DragonPals)
+        // Controllers with JSON options
         services
             .AddControllers()
             .AddJsonOptions(static options =>
