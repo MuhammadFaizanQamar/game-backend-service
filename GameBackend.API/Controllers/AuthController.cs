@@ -18,32 +18,17 @@ public class AuthController : PlayerControllerBase
         _registerUseCase = registerUseCase;
         _loginUseCase = loginUseCase;
     }
-
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        try
-        {
-            var response = await _registerUseCase.ExecuteAsync(request);
-            return CreatedAtAction(nameof(Register), response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _registerUseCase.ExecuteAsync(request);
+        return CreatedAtAction(nameof(Register), response);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        try
-        {
-            var response = await _loginUseCase.ExecuteAsync(request);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex, 401);
-        }
+        var response = await _loginUseCase.ExecuteAsync(request);
+        return Ok(response);
     }
 }

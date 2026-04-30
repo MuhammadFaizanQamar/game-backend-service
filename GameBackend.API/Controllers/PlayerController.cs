@@ -24,42 +24,21 @@ public class PlayerController : PlayerControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> GetMyProfile()
     {
-        try
-        {
-            var response = await _getProfileUseCase.ExecuteAsync(CurrentPlayerId);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _getProfileUseCase.ExecuteAsync(CurrentPlayerId);
+        return Ok(response);
     }
 
     [HttpPut("me")]
     public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileRequest request)
     {
-        try
-        {
-            var response = await _updateProfileUseCase.ExecuteAsync(CurrentPlayerId, request);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _updateProfileUseCase.ExecuteAsync(CurrentPlayerId, request);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPlayerById(Guid id)
     {
-        try
-        {
-            var response = await _getProfileUseCase.ExecuteAsync(id);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex, 404);
-        }
+        var response = await _getProfileUseCase.ExecuteAsync(id);
+        return Ok(response);
     }
 }

@@ -30,56 +30,28 @@ public class SessionController : PlayerControllerBase
     [HttpPost("start")]
     public async Task<IActionResult> StartSession([FromBody] StartSessionRequest request)
     {
-        try
-        {
-            var response = await _startSessionUseCase.ExecuteAsync(CurrentPlayerId, request);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _startSessionUseCase.ExecuteAsync(CurrentPlayerId, request);
+        return Ok(response);
     }
 
     [HttpPost("{gameId}/end")]
     public async Task<IActionResult> EndSession(string gameId, [FromBody] EndSessionRequest request)
     {
-        try
-        {
-            var response = await _endSessionUseCase.ExecuteAsync(CurrentPlayerId, gameId, request);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _endSessionUseCase.ExecuteAsync(CurrentPlayerId, gameId, request);
+        return Ok(response);
     }
 
     [HttpGet("{gameId}/history")]
     public async Task<IActionResult> GetHistory(string gameId, [FromQuery] int limit = 20)
     {
-        try
-        {
-            var response = await _getHistoryUseCase.ExecuteAsync(CurrentPlayerId, gameId, limit);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _getHistoryUseCase.ExecuteAsync(CurrentPlayerId, gameId, limit);
+        return Ok(response);
     }
 
     [HttpGet("{gameId}/stats")]
     public async Task<IActionResult> GetStats(string gameId)
     {
-        try
-        {
-            var response = await _getStatsUseCase.ExecuteAsync(CurrentPlayerId, gameId);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return HandleError(ex);
-        }
+        var response = await _getStatsUseCase.ExecuteAsync(CurrentPlayerId, gameId);
+        return Ok(response);
     }
 }

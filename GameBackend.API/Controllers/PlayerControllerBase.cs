@@ -29,14 +29,4 @@ public abstract class PlayerControllerBase : ControllerBase
             return claim?.Value ?? string.Empty;
         }
     }
-
-    protected IActionResult HandleError(Exception ex, int statusCode = 400)
-    {
-        return statusCode switch
-        {
-            401 => Unauthorized(new { error = ex.Message }),
-            404 => NotFound(new { error = ex.Message }),
-            _ => BadRequest(new { error = ex.Message })
-        };
-    }
 }
