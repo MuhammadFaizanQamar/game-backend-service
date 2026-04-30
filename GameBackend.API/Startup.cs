@@ -69,6 +69,11 @@ public class Startup
         services.AddScoped<GetTopLeaderboardUseCase>();
         services.AddScoped<GetPlayerRankUseCase>();
 
+        //Refresh Token
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<RefreshTokenUseCase>();
+        services.AddScoped<LogoutUseCase>();
+
         // JWT Authentication
         var jwtKey = Configuration["Jwt:Key"]!;
         services
