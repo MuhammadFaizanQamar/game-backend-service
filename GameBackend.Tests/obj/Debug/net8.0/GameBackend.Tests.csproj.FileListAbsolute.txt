@@ -74,3 +74,6 @@ C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\obj\Debug\net8.0\Game
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\obj\Debug\net8.0\ref\GameBackend.Tests.dll
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\StackExchange.Redis.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Tests\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

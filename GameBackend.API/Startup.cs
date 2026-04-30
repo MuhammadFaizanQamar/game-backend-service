@@ -12,6 +12,9 @@ using GameBackend.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using GameBackend.Application.Validators.Auth;
 
 namespace GameBackend.API;
 
@@ -28,10 +31,7 @@ public class Startup
     {
         // Database
         services.AddDbContext<GameDbContext>(options =>
-            options.UseNpgsql(
-                Configuration.GetConnectionString("DefaultConnection"),
-                x => x.EnableRetryOnFailure()
-            ));
+            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         // Repositories
         services.AddScoped<IPlayerRepository, PlayerRepository>();
@@ -115,14 +115,16 @@ public class Startup
             .AddControllers()
             .AddJsonOptions(static options =>
             {
-                // Enums as strings — readable API responses
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                // Case insensitive — forgiving for clients
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                // Don't send null fields — cleaner responses
                 options.JsonSerializerOptions.DefaultIgnoreCondition =
                     JsonIgnoreCondition.WhenWritingNull;
             });
+
+        // FluentValidation — modern API
+        services.AddFluentValidationAutoValidation();
+        services.AddFluentValidationClientsideAdapters();
+        services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
 
         services.AddAuthorization();
         services.AddEndpointsApiExplorer();
@@ -131,7 +133,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        //if (env.IsDevelopment())
+        if (env.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();

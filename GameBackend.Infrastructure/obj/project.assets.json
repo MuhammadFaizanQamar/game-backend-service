@@ -15,6 +15,19 @@
           }
         }
       },
+      "FluentValidation/11.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/FluentValidation.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/FluentValidation.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -1053,6 +1066,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "FluentValidation": "11.3.0",
           "GameBackend.Core": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "8.0.6",
           "Microsoft.EntityFrameworkCore": "8.0.11",
@@ -1117,6 +1131,29 @@
         "lib/netstandard2.1/BCrypt.Net-Next.dll",
         "lib/netstandard2.1/BCrypt.Net-Next.xml",
         "readme.md"
+      ]
+    },
+    "FluentValidation/11.3.0": {
+      "sha512": "AlsfUkdIzSMA2v091K0gT1YjEwc7YR5pIA5yq7PnZivhoH3YETMhZbUySzsLbJKhj/E3ei6nEgtqdm00AVHXeg==",
+      "type": "package",
+      "path": "fluentvalidation/11.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "fluent-validation-icon.png",
+        "fluentvalidation.11.3.0.nupkg.sha512",
+        "fluentvalidation.nuspec",
+        "lib/net5.0/FluentValidation.dll",
+        "lib/net5.0/FluentValidation.xml",
+        "lib/net6.0/FluentValidation.dll",
+        "lib/net6.0/FluentValidation.xml",
+        "lib/net7.0/FluentValidation.dll",
+        "lib/net7.0/FluentValidation.xml",
+        "lib/netstandard2.0/FluentValidation.dll",
+        "lib/netstandard2.0/FluentValidation.xml",
+        "lib/netstandard2.1/FluentValidation.dll",
+        "lib/netstandard2.1/FluentValidation.xml"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -3034,13 +3071,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: The download of 'https://api.nuget.org/v3-vulnerabilities/2026.04.24.08.53.42/vulnerability.base.json' timed out because no data was received for 60000ms."
-    }
-  ]
+  }
 }

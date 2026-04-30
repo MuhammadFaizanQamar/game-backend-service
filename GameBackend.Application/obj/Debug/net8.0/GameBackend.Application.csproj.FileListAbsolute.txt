@@ -43,3 +43,4 @@ C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\obj\Debug\net8.
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\obj\Debug\net8.0\GameBackend.Application.pdb
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\obj\Debug\net8.0\GameBackend.Application.genruntimeconfig.cache
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\obj\Debug\net8.0\ref\GameBackend.Application.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.Application\bin\Debug\net8.0\FluentValidation.dll

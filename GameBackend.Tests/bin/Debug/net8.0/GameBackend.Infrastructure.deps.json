@@ -32,6 +32,14 @@
           }
         }
       },
+      "FluentValidation/11.3.0": {
+        "runtime": {
+          "lib/net7.0/FluentValidation.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.3.0.0"
+          }
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
@@ -666,6 +674,7 @@
       "System.Threading.Channels/6.0.0": {},
       "GameBackend.Application/1.0.0": {
         "dependencies": {
+          "FluentValidation": "11.3.0",
           "GameBackend.Core": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "8.0.6",
           "Microsoft.EntityFrameworkCore": "8.0.11",
@@ -698,6 +707,13 @@
       "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "path": "bcrypt.net-next/4.0.3",
       "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
+    },
+    "FluentValidation/11.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AlsfUkdIzSMA2v091K0gT1YjEwc7YR5pIA5yq7PnZivhoH3YETMhZbUySzsLbJKhj/E3ei6nEgtqdm00AVHXeg==",
+      "path": "fluentvalidation/11.3.0",
+      "hashPath": "fluentvalidation.11.3.0.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",
