@@ -16,7 +16,7 @@ public class GetPlayerProfileUseCase
     {
         var player = await _playerRepository.GetByIdAsync(playerId);
         if (player == null)
-            throw new Exception("Player not found");
+            throw new KeyNotFoundException("Player not found");
 
         // Update last seen
         player.LastSeenAt = DateTime.UtcNow;

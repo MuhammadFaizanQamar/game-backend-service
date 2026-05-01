@@ -1,4 +1,5 @@
 using GameBackend.API.RateLimiting;
+using GameBackend.Application.Contracts.Common;
 using GameBackend.Application.Contracts.Leaderboards;
 using GameBackend.Application.UseCases.Leaderboards;
 using Microsoft.AspNetCore.Authorization;
@@ -34,13 +35,6 @@ public class LeaderboardController : PlayerControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{gameId}/top")]
-    public async Task<IActionResult> GetTop(string gameId, [FromQuery] string name, [FromQuery] int limit = 10)
-    {
-        var response = await _getTopUseCase.ExecuteAsync(gameId, name, limit);
-        return Ok(response);
-    }
-
     [HttpGet("{gameId}/me")]
     public async Task<IActionResult> GetMyRank(string gameId, [FromQuery] string name)
     {
@@ -49,9 +43,23 @@ public class LeaderboardController : PlayerControllerBase
     }
 
     [HttpGet("{gameId}/around-me")]
-    public async Task<IActionResult> GetAroundMe(string gameId, [FromQuery] string name, [FromQuery] int range = 5)
+    public async Task<IActionResult> GetAroundMe(
+        string gameId,
+        [FromQuery] string name,
+        [FromQuery] int range = 5)
     {
-        var response = await _getTopUseCase.ExecuteAsync(gameId, name, range);
+        var pagination = new PaginationRequest { Page = 1, Limit = range * 2 + 1 };
+        var response = await _getTopUseCase.ExecuteAsync(gameId, name, pagination);
+        return Ok(response);
+    }
+
+    [HttpGet("{gameId}/top")]
+    public async Task<IActionResult> GetTop(
+        string gameId,
+        [FromQuery] string name,
+        [FromQuery] PaginationRequest pagination)
+    {
+        var response = await _getTopUseCase.ExecuteAsync(gameId, name, pagination);
         return Ok(response);
     }
 }

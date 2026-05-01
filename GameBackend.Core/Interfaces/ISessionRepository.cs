@@ -9,6 +9,8 @@ public interface ISessionRepository
     Task<GameSession> UpdateAsync(GameSession session);
     Task<List<GameSession>> GetPlayerHistoryAsync(Guid playerId, string gameId, int limit);
     Task<PlayerSessionStats> GetPlayerStatsAsync(Guid playerId, string gameId);
+
+    Task<(List<GameSession> Sessions, int TotalCount)> GetPlayerHistoryAsync(Guid playerId, string gameId, int skip, int limit);
 }
 
 public class PlayerSessionStats

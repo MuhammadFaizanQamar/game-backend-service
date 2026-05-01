@@ -9,7 +9,7 @@ public interface ILeaderboardRepository
     Task<LeaderboardEntry?> GetEntryByPlayerAsync(Guid leaderboardId, Guid playerId);
     Task<LeaderboardEntry> AddEntryAsync(LeaderboardEntry entry);
     Task<LeaderboardEntry> UpdateEntryAsync(LeaderboardEntry entry);
-    Task<List<LeaderboardEntry>> GetTopEntriesAsync(Guid leaderboardId, int limit);
+    Task<(List<LeaderboardEntry> Entries, int TotalCount)> GetTopEntriesAsync(Guid leaderboardId, int skip, int limit);
     Task<int> GetPlayerRankAsync(Guid leaderboardId, Guid playerId);
     Task<List<LeaderboardEntry>> GetEntriesAroundPlayerAsync(Guid leaderboardId, Guid playerId, int range);
 }

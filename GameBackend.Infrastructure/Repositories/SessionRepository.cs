@@ -37,15 +37,24 @@ public class SessionRepository : ISessionRepository
         return session;
     }
 
-    public async Task<List<GameSession>> GetPlayerHistoryAsync(Guid playerId, string gameId, int limit)
+    public Task<List<GameSession>> GetPlayerHistoryAsync(Guid playerId, string gameId, int limit)
     {
-        return await _context.GameSessions
+        throw new NotImplementedException();
+    }
+
+    public async Task<(List<GameSession> Sessions, int TotalCount)> GetPlayerHistoryAsync(
+        Guid playerId, string gameId, int skip, int limit)
+    {
+        var query = _context.GameSessions
             .Where(x => x.PlayerId == playerId &&
                         x.GameId == gameId &&
                         x.Status == SessionStatus.Completed)
-            .OrderByDescending(x => x.StartedAt)
-            .Take(limit)
-            .ToListAsync();
+            .OrderByDescending(x => x.StartedAt);
+
+        var totalCount = await query.CountAsync();
+        var sessions = await query.Skip(skip).Take(limit).ToListAsync();
+
+        return (sessions, totalCount);
     }
 
     public async Task<PlayerSessionStats> GetPlayerStatsAsync(Guid playerId, string gameId)

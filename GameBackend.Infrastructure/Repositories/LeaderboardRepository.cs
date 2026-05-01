@@ -47,14 +47,18 @@ public class LeaderboardRepository : ILeaderboardRepository
         return entry;
     }
 
-    public async Task<List<LeaderboardEntry>> GetTopEntriesAsync(Guid leaderboardId, int limit)
+    public async Task<(List<LeaderboardEntry> Entries, int TotalCount)> GetTopEntriesAsync(
+        Guid leaderboardId, int skip, int limit)
     {
-        return await _context.LeaderboardEntries
+        var query = _context.LeaderboardEntries
             .Where(x => x.LeaderboardId == leaderboardId)
             .Include(x => x.Player)
-            .OrderByDescending(x => x.Score)
-            .Take(limit)
-            .ToListAsync();
+            .OrderByDescending(x => x.Score);
+
+        var totalCount = await query.CountAsync();
+        var entries = await query.Skip(skip).Take(limit).ToListAsync();
+
+        return (entries, totalCount);
     }
 
     public async Task<int> GetPlayerRankAsync(Guid leaderboardId, Guid playerId)

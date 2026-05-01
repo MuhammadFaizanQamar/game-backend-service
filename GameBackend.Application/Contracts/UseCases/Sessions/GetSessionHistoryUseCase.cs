@@ -1,3 +1,4 @@
+using GameBackend.Application.Contracts.Common;
 using GameBackend.Application.Contracts.Sessions;
 using GameBackend.Core.Interfaces;
 
@@ -12,19 +13,27 @@ public class GetSessionHistoryUseCase
         _sessionRepository = sessionRepository;
     }
 
-    public async Task<List<SessionResponse>> ExecuteAsync(Guid playerId, string gameId, int limit = 20)
+    public async Task<PagedResponse<SessionResponse>> ExecuteAsync(
+        Guid playerId, string gameId, PaginationRequest pagination)
     {
-        var sessions = await _sessionRepository.GetPlayerHistoryAsync(playerId, gameId, limit);
+        var (sessions, totalCount) = await _sessionRepository
+            .GetPlayerHistoryAsync(playerId, gameId, pagination.Skip, pagination.Limit);
 
-        return sessions.Select(session => new SessionResponse
+        return new PagedResponse<SessionResponse>
         {
-            Id = session.Id,
-            GameId = session.GameId,
-            Status = session.Status,
-            Score = session.Score,
-            Metadata = session.Metadata,
-            StartedAt = session.StartedAt,
-            EndedAt = session.EndedAt
-        }).ToList();
+            Page = pagination.Page,
+            Limit = pagination.Limit,
+            TotalCount = totalCount,
+            Data = sessions.Select(session => new SessionResponse
+            {
+                Id = session.Id,
+                GameId = session.GameId,
+                Status = session.Status,
+                Score = session.Score,
+                Metadata = session.Metadata,
+                StartedAt = session.StartedAt,
+                EndedAt = session.EndedAt
+            }).ToList()
+        };
     }
 }

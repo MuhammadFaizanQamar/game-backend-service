@@ -1,4 +1,5 @@
 using GameBackend.API.RateLimiting;
+using GameBackend.Application.Contracts.Common;
 using GameBackend.Application.Contracts.Sessions;
 using GameBackend.Application.UseCases.Sessions;
 using Microsoft.AspNetCore.Authorization;
@@ -44,17 +45,19 @@ public class SessionController : PlayerControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{gameId}/history")]
-    public async Task<IActionResult> GetHistory(string gameId, [FromQuery] int limit = 20)
-    {
-        var response = await _getHistoryUseCase.ExecuteAsync(CurrentPlayerId, gameId, limit);
-        return Ok(response);
-    }
-
     [HttpGet("{gameId}/stats")]
     public async Task<IActionResult> GetStats(string gameId)
     {
         var response = await _getStatsUseCase.ExecuteAsync(CurrentPlayerId, gameId);
+        return Ok(response);
+    }
+
+    [HttpGet("{gameId}/history")]
+    public async Task<IActionResult> GetHistory(
+        string gameId,
+        [FromQuery] PaginationRequest pagination)
+    {
+        var response = await _getHistoryUseCase.ExecuteAsync(CurrentPlayerId, gameId, pagination);
         return Ok(response);
     }
 }

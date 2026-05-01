@@ -6,6 +6,7 @@ namespace GameBackend.Infrastructure.Persistence;
 public class GameDbContext : DbContext
 {
     public DbSet<GameSession> GameSessions => Set<GameSession>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     public GameDbContext(DbContextOptions<GameDbContext> options)
         : base(options)
@@ -19,6 +20,15 @@ public class GameDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.HasIndex(x => x.Token).IsUnique();
+            entity.HasOne(x => x.Player)
+                .WithMany()
+                .HasForeignKey(x => x.PlayerId);
+        });
 
         builder.Entity<Player>(entity =>
         {

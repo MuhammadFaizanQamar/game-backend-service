@@ -1,3 +1,4 @@
+using GameBackend.Application.Contracts.Common;
 using GameBackend.Application.Contracts.Leaderboards;
 using GameBackend.Core.Interfaces;
 using System.Text.Json;
@@ -17,42 +18,40 @@ public class GetTopLeaderboardUseCase
         _cacheService = cacheService;
     }
 
-    public async Task<LeaderboardResponse> ExecuteAsync(string gameId, string name, int limit = 10)
+    public async Task<PagedResponse<ScoreResponse>> ExecuteAsync(
+        string gameId, string name, PaginationRequest pagination)
     {
         var leaderboard = await _leaderboardRepository.GetByGameIdAndNameAsync(gameId, name);
         if (leaderboard == null)
-            throw new Exception("Leaderboard not found");
+            throw new KeyNotFoundException("Leaderboard not found");
 
-        // Check cache first
-        var cacheKey = $"leaderboard:{leaderboard.Id}:top:{limit}";
+        // Cache key includes page and limit
+        var cacheKey = $"leaderboard:{leaderboard.Id}:top:{pagination.Page}:{pagination.Limit}";
         var cached = await _cacheService.GetAsync(cacheKey);
         if (cached != null)
         {
-            var cachedResponse = JsonSerializer.Deserialize<LeaderboardResponse>(cached);
+            var cachedResponse = JsonSerializer.Deserialize<PagedResponse<ScoreResponse>>(cached);
             if (cachedResponse != null) return cachedResponse;
         }
 
-        // Query DB
-        var entries = await _leaderboardRepository.GetTopEntriesAsync(leaderboard.Id, limit);
+        var (entries, totalCount) = await _leaderboardRepository
+            .GetTopEntriesAsync(leaderboard.Id, pagination.Skip, pagination.Limit);
 
-        var response = new LeaderboardResponse
+        var response = new PagedResponse<ScoreResponse>
         {
-            LeaderboardId = leaderboard.Id,
-            GameId = gameId,
-            Name = name,
-            ScoreType = leaderboard.ScoreType,
-            GeneratedAt = DateTime.UtcNow,
-            Entries = entries.Select((e, index) => new ScoreResponse
+            Page = pagination.Page,
+            Limit = pagination.Limit,
+            TotalCount = totalCount,
+            Data = entries.Select((e, index) => new ScoreResponse
             {
                 PlayerId = e.PlayerId,
                 Username = e.Player?.Username ?? string.Empty,
                 Score = e.Score,
-                Rank = index + 1,
+                Rank = pagination.Skip + index + 1,
                 Metadata = e.Metadata
             }).ToList()
         };
 
-        // Cache for 60 seconds
         await _cacheService.SetAsync(
             cacheKey,
             JsonSerializer.Serialize(response),

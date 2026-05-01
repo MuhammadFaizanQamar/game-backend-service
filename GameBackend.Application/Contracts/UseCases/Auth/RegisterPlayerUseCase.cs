@@ -9,28 +9,28 @@ public class RegisterPlayerUseCase
     private readonly IPlayerRepository _playerRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
     public RegisterPlayerUseCase(
         IPlayerRepository playerRepository,
         IPasswordHasher passwordHasher,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        IRefreshTokenRepository refreshTokenRepository)
     {
         _playerRepository = playerRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
     public async Task<AuthResponse> ExecuteAsync(RegisterRequest request)
     {
-        // 1. Check if user exists
         var existingUser = await _playerRepository.GetByEmailAsync(request.Email);
         if (existingUser != null)
-            throw new Exception("User already exists");
+            throw new InvalidOperationException("User already exists");
 
-        // 2. Hash password
         var hashedPassword = _passwordHasher.Hash(request.Password);
 
-        // 3. Create player
         var player = new Player
         {
             Id = Guid.NewGuid(),
@@ -41,18 +41,27 @@ public class RegisterPlayerUseCase
             LastSeenAt = DateTime.UtcNow
         };
 
-        // 4. Save
         await _playerRepository.AddAsync(player);
 
-        // 5. Generate token
-        var token = _jwtTokenGenerator.GenerateToken(player.Id, player.Username);
+        var accessToken = _jwtTokenGenerator.GenerateToken(player.Id, player.Username);
+        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
 
-        // 6. Return response
+        await _refreshTokenRepository.AddAsync(new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            Token = refreshToken,
+            PlayerId = player.Id,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            IsRevoked = false
+        });
+
         return new AuthResponse
         {
             PlayerId = player.Id,
             Username = player.Username,
-            Token = token
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         };
     }
 }
