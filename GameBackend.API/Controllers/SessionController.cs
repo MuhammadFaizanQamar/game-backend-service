@@ -1,13 +1,16 @@
+using GameBackend.API.RateLimiting;
 using GameBackend.Application.Contracts.Sessions;
 using GameBackend.Application.UseCases.Sessions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GameBackend.API.Controllers;
 
 [ApiController]
 [Route("api/sessions")]
 [Authorize]
+[EnableRateLimiting(RateLimitingConfiguration.GeneralPolicy)]
 public class SessionController : PlayerControllerBase
 {
     private readonly StartSessionUseCase _startSessionUseCase;

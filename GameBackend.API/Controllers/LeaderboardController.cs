@@ -1,13 +1,16 @@
+using GameBackend.API.RateLimiting;
 using GameBackend.Application.Contracts.Leaderboards;
 using GameBackend.Application.UseCases.Leaderboards;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GameBackend.API.Controllers;
 
 [ApiController]
 [Route("api/leaderboards")]
 [Authorize]
+[EnableRateLimiting(RateLimitingConfiguration.LeaderboardPolicy)]
 public class LeaderboardController : PlayerControllerBase
 {
     private readonly SubmitScoreUseCase _submitScoreUseCase;

@@ -1,12 +1,15 @@
+using GameBackend.API.RateLimiting;
 using GameBackend.Application.Contracts.Auth;
 using GameBackend.Application.UseCases.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GameBackend.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[EnableRateLimiting(RateLimitingConfiguration.AuthPolicy)]
 public class AuthController : PlayerControllerBase
 {
     private readonly RegisterPlayerUseCase _registerUseCase;

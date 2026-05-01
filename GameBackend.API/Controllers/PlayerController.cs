@@ -1,13 +1,16 @@
+using GameBackend.API.RateLimiting;
 using GameBackend.Application.Contracts.Players;
 using GameBackend.Application.UseCases.Players;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GameBackend.API.Controllers;
 
 [ApiController]
 [Route("api/players")]
 [Authorize]
+[EnableRateLimiting(RateLimitingConfiguration.GeneralPolicy)]
 public class PlayerController : PlayerControllerBase
 {
     private readonly GetPlayerProfileUseCase _getProfileUseCase;

@@ -16,6 +16,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using GameBackend.Application.Validators.Auth;
 using GameBackend.API.Middleware;
+using GameBackend.API.RateLimiting;
 
 namespace GameBackend.API;
 
@@ -135,6 +136,7 @@ public class Startup
         services.AddAuthorization();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddGameBackendRateLimiting();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -149,6 +151,11 @@ public class Startup
 
         app.UseRouting();
         app.UseCors();
+        app.UseRouting();
+        app.UseCors();
+        app.UseRateLimiter();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseAuthentication();
         app.UseAuthorization();
 
