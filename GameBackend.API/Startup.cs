@@ -190,7 +190,7 @@ public class Startup
     {
         app.UseMiddleware<ErrorHandlingMiddleware>();
 
-        if (env.IsDevelopment())
+        //if (env.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
