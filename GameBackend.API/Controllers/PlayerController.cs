@@ -24,6 +24,7 @@ public class PlayerController : PlayerControllerBase
         _updateProfileUseCase = updateProfileUseCase;
     }
 
+    /// <summary>Get your own player profile</summary>
     [HttpGet("me")]
     public async Task<IActionResult> GetMyProfile()
     {
@@ -31,6 +32,8 @@ public class PlayerController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Update your player profile</summary>
+    /// <remarks>Only provided fields will be updated</remarks>
     [HttpPut("me")]
     public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateProfileRequest request)
     {
@@ -38,6 +41,7 @@ public class PlayerController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Get any player's public profile by ID</summary>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPlayerById(Guid id)
     {

@@ -29,6 +29,8 @@ public class AuthController : PlayerControllerBase
         _logoutUseCase = logoutUseCase;
     }
 
+    /// <summary>Register a new player account</summary>
+    /// <remarks>Creates a new player and returns JWT access and refresh tokens</remarks>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
@@ -36,6 +38,8 @@ public class AuthController : PlayerControllerBase
         return CreatedAtAction(nameof(Register), response);
     }
 
+    /// <summary>Login with existing credentials</summary>
+    /// <remarks>Returns JWT access token (15 min) and refresh token (7 days)</remarks>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -43,6 +47,8 @@ public class AuthController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Refresh an expired access token</summary>
+    /// <remarks>Exchange a valid refresh token for a new access token</remarks>
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
     {
@@ -50,6 +56,7 @@ public class AuthController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Logout and revoke all refresh tokens</summary>
     [HttpPost("logout")]
     [Authorize]
     public async Task<IActionResult> Logout()

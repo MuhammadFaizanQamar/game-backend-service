@@ -28,6 +28,8 @@ public class LeaderboardController : PlayerControllerBase
         _getPlayerRankUseCase = getPlayerRankUseCase;
     }
 
+    /// <summary>Submit a score to a leaderboard</summary>
+    /// <remarks>Auto-creates the leaderboard if it doesn't exist. Only updates if new score is higher than existing.</remarks>
     [HttpPost("{gameId}/scores")]
     public async Task<IActionResult> SubmitScore(string gameId, [FromBody] SubmitScoreRequest request)
     {
@@ -35,6 +37,7 @@ public class LeaderboardController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Get your own rank on a leaderboard</summary>
     [HttpGet("{gameId}/me")]
     public async Task<IActionResult> GetMyRank(string gameId, [FromQuery] string name)
     {
@@ -42,6 +45,7 @@ public class LeaderboardController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Get players ranked around you</summary>
     [HttpGet("{gameId}/around-me")]
     public async Task<IActionResult> GetAroundMe(
         string gameId,
@@ -53,6 +57,8 @@ public class LeaderboardController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Get top players on a leaderboard</summary>
+    /// <remarks>Results are cached for 60 seconds in Redis</remarks>
     [HttpGet("{gameId}/top")]
     public async Task<IActionResult> GetTop(
         string gameId,

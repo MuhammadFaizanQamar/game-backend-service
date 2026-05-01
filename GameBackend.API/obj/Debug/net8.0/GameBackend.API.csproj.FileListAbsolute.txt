@@ -139,3 +139,5 @@ C:\Users\faiza\RiderProjects\GameBackend\GameBackend.API\bin\Debug\net8.0\StackE
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.API\bin\Debug\net8.0\FluentValidation.dll
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.API\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Users\faiza\RiderProjects\GameBackend\GameBackend.API\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.API\bin\Debug\net8.0\GameBackend.API.xml
+C:\Users\faiza\RiderProjects\GameBackend\GameBackend.API\obj\Debug\net8.0\GameBackend.API.xml

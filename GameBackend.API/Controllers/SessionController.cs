@@ -31,6 +31,8 @@ public class SessionController : PlayerControllerBase
         _getStatsUseCase = getStatsUseCase;
     }
 
+    /// <summary>Start a new game session</summary>
+    /// <remarks>If an active session exists it will be automatically abandoned</remarks>
     [HttpPost("start")]
     public async Task<IActionResult> StartSession([FromBody] StartSessionRequest request)
     {
@@ -38,6 +40,7 @@ public class SessionController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>End the current active session and submit score</summary>
     [HttpPost("{gameId}/end")]
     public async Task<IActionResult> EndSession(string gameId, [FromBody] EndSessionRequest request)
     {
@@ -45,6 +48,8 @@ public class SessionController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Get your aggregated stats for a game</summary>
+    /// <remarks>Returns total games, best score, average score and last played date</remarks>
     [HttpGet("{gameId}/stats")]
     public async Task<IActionResult> GetStats(string gameId)
     {
@@ -52,6 +57,7 @@ public class SessionController : PlayerControllerBase
         return Ok(response);
     }
 
+    /// <summary>Get your session history for a game</summary>
     [HttpGet("{gameId}/history")]
     public async Task<IActionResult> GetHistory(
         string gameId,

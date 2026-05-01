@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using GameBackend.Application.UseCases.Auth;
@@ -17,6 +18,7 @@ using FluentValidation.AspNetCore;
 using GameBackend.Application.Validators.Auth;
 using GameBackend.API.Middleware;
 using GameBackend.API.RateLimiting;
+using Microsoft.OpenApi.Models;
 
 namespace GameBackend.API;
 
@@ -135,7 +137,52 @@ public class Startup
 
         services.AddAuthorization();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Game Backend API",
+                Version = "v1",
+                Description = "A generic game backend API supporting authentication, leaderboards, sessions and player profiles. Built with ASP.NET Core 8, PostgreSQL, Redis and Clean Architecture.",
+                Contact = new OpenApiContact
+                {
+                    Name = "Muhammad Faizan Qamar",
+                    Url = new Uri("https://github.com/MuhammadFaizanQamar/game-backend-service")
+                }
+            });
+
+            // Add JWT auth to Swagger
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter your JWT token like this: Bearer {your token}"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+
+            // Include XML comments
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            if (File.Exists(xmlPath))
+                options.IncludeXmlComments(xmlPath);
+        });
         services.AddGameBackendRateLimiting();
     }
 
