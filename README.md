@@ -1,4 +1,5 @@
 # Game Backend Service
+![CI](https://github.com/MuhammadFaizanQamar/game-backend-service/actions/workflows/ci.yml/badge.svg)
 
 A production-deployed, generic game backend API built with ASP.NET Core 8. Supports multiple games via a single configurable server — inspired by PlayFab architecture.
 
