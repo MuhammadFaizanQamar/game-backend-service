@@ -14,8 +14,8 @@ public class GameBackendWebFactory : WebApplicationFactory<Program>, IAsyncLifet
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()
         .WithImage("postgres:16")
         .WithDatabase("gamebackend_test")
-        .WithUsername("postgres")
-        .WithPassword("postgres")
+        .WithUsername("testuser")
+        .WithPassword("testpass_local_only")
         .Build();
 
     public async Task InitializeAsync()
