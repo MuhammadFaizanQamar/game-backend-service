@@ -18,6 +18,7 @@ using FluentValidation.AspNetCore;
 using GameBackend.Application.Validators.Auth;
 using GameBackend.API.Middleware;
 using GameBackend.API.RateLimiting;
+using GameBackend.Application.UseCases.Admin;
 using Microsoft.OpenApi.Models;
 
 namespace GameBackend.API;
@@ -76,6 +77,13 @@ public class Startup
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<RefreshTokenUseCase>();
         services.AddScoped<LogoutUseCase>();
+
+        // Admin
+        services.AddScoped<GetAllPlayersUseCase>();
+        services.AddScoped<BanPlayerUseCase>();
+        services.AddScoped<UnbanPlayerUseCase>();
+        services.AddScoped<UpdatePlayerRoleUseCase>();
+        services.AddScoped<DeletePlayerUseCase>();
 
         // JWT Authentication
         var jwtKey = Configuration["Jwt:Key"]!;

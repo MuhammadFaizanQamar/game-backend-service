@@ -42,7 +42,10 @@ public class RefreshTokenUseCase
         await _refreshTokenRepository.UpdateAsync(refreshToken);
 
         // Generate new tokens
-        var newAccessToken = _jwtTokenGenerator.GenerateToken(player.Id, player.Username);
+        var newAccessToken = _jwtTokenGenerator.GenerateToken(
+            player.Id,
+            player.Username,
+            player.Role.ToString());
         var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
 
         await _refreshTokenRepository.AddAsync(new RefreshToken

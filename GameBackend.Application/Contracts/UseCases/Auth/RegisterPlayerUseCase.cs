@@ -43,7 +43,10 @@ public class RegisterPlayerUseCase
 
         await _playerRepository.AddAsync(player);
 
-        var accessToken = _jwtTokenGenerator.GenerateToken(player.Id, player.Username);
+        var accessToken = _jwtTokenGenerator.GenerateToken(
+            player.Id,
+            player.Username,
+            player.Role.ToString());
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
 
         await _refreshTokenRepository.AddAsync(new RefreshToken

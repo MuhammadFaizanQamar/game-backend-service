@@ -9,4 +9,6 @@ public interface IPlayerRepository
     Task<Player?> GetByIdAsync(Guid id);
     Task AddAsync(Player player);
     Task UpdateAsync(Player player);
+    Task<(List<Player> Players, int TotalCount)> GetAllAsync(int skip, int limit);
+    Task DeleteAsync(Guid id);
 }

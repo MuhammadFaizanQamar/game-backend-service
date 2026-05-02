@@ -36,6 +36,8 @@ public class GameDbContext : DbContext
             entity.HasIndex(x => x.Email).IsUnique();
             entity.HasIndex(x => x.Username).IsUnique();
             entity.Property(x => x.Metadata).HasColumnType("jsonb");
+            entity.Property(x => x.Role)
+                .HasConversion<int>();
         });
 
         builder.Entity<Leaderboard>(entity =>

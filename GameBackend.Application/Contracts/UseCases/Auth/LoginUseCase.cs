@@ -33,10 +33,16 @@ public class LoginUseCase
         if (!isValid)
             throw new UnauthorizedAccessException("Invalid credentials");
 
+        if (player.IsBanned)
+            throw new UnauthorizedAccessException("Your account has been banned");
+
         // Revoke all existing refresh tokens on new login
         await _refreshTokenRepository.RevokeAllPlayerTokensAsync(player.Id);
 
-        var accessToken = _jwtTokenGenerator.GenerateToken(player.Id, player.Username);
+        var accessToken = _jwtTokenGenerator.GenerateToken(
+            player.Id,
+            player.Username,
+            player.Role.ToString());
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
 
         await _refreshTokenRepository.AddAsync(new RefreshToken

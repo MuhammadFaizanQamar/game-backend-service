@@ -17,7 +17,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _settings = settings.Value;
     }
 
-    public string GenerateToken(Guid playerId, string username)
+    public string GenerateToken(Guid playerId, string username, string role = "Player")
     {
         var securityKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_settings.Key));
@@ -27,7 +27,8 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, playerId.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, username)
+            new Claim(JwtRegisteredClaimNames.UniqueName, username),
+            new Claim(ClaimTypes.Role, role)
         };
 
         var token = new JwtSecurityToken(
