@@ -26,23 +26,21 @@ namespace GameBackend.API;
 
 public class Startup
 {
-    private bool IsTestEnvironment()
-    {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        return env == "Testing";
-    }
+    public IConfiguration Configuration { get; }
+    public IWebHostEnvironment Environment { get; }
 
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         Configuration = configuration;
+        Environment = environment;
     }
-
-    public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
-        if (!IsTestEnvironment())
+        if (!Environment.IsEnvironment("Testing"))
+        {
             services.AddGameBackendRateLimiting();
+        }
 
         // Database
         services.AddDbContext<GameDbContext>(options =>
@@ -202,7 +200,6 @@ public class Startup
             if (File.Exists(xmlPath))
                 options.IncludeXmlComments(xmlPath);
         });
-        services.AddGameBackendRateLimiting();
 
         // SignalR
         services.AddSignalR();
