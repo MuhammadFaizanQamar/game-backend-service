@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using GameBackend.API.Hubs;
 using GameBackend.Application.Validators.Auth;
 using GameBackend.API.Middleware;
 using GameBackend.API.RateLimiting;
@@ -123,9 +124,10 @@ public class Startup
         services.AddCors(options =>
             options.AddDefaultPolicy(policy =>
                 policy
-                    .AllowAnyOrigin()
-                    .WithMethods("GET", "POST", "PUT", "DELETE")
-                    .AllowAnyHeader()));
+                    .WithOrigins("http://localhost:5152", "null", "file://")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()));
 
         // Controllers with JSON options
         services
@@ -192,6 +194,10 @@ public class Startup
                 options.IncludeXmlComments(xmlPath);
         });
         services.AddGameBackendRateLimiting();
+
+        // SignalR
+        services.AddSignalR();
+        services.AddScoped<ILeaderboardNotificationService, LeaderboardNotificationService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -217,8 +223,7 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-
-            // Health check endpoint — same pattern as DragonPals
+            endpoints.MapHub<LeaderboardHub>("/hubs/leaderboard");
             endpoints.Map("/", static context =>
                 context.Response.WriteAsync("GameBackend API is running"));
         });

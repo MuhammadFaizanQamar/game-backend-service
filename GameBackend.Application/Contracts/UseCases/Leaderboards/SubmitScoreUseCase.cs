@@ -9,15 +9,18 @@ public class SubmitScoreUseCase
     private readonly ILeaderboardRepository _leaderboardRepository;
     private readonly IPlayerRepository _playerRepository;
     private readonly ICacheService _cacheService;
+    private readonly ILeaderboardNotificationService? _notificationService;
 
     public SubmitScoreUseCase(
         ILeaderboardRepository leaderboardRepository,
         IPlayerRepository playerRepository,
-        ICacheService cacheService)
+        ICacheService cacheService,
+        ILeaderboardNotificationService? notificationService = null)
     {
         _leaderboardRepository = leaderboardRepository;
         _playerRepository = playerRepository;
         _cacheService = cacheService;
+        _notificationService = notificationService;
     }
 
     public async Task<ScoreResponse> ExecuteAsync(string gameId, Guid playerId, SubmitScoreRequest request)
@@ -42,7 +45,6 @@ public class SubmitScoreUseCase
 
         if (existingEntry != null)
         {
-            // Option A — only update if new score is higher
             if (request.Score <= existingEntry.Score)
             {
                 var currentRank = await _leaderboardRepository.GetPlayerRankAsync(leaderboard.Id, playerId);
@@ -57,7 +59,6 @@ public class SubmitScoreUseCase
                 };
             }
 
-            // Update with new high score
             existingEntry.Score = request.Score;
             existingEntry.Metadata = request.Metadata ?? "{}";
             existingEntry.SubmittedAt = DateTime.UtcNow;
@@ -65,7 +66,6 @@ public class SubmitScoreUseCase
         }
         else
         {
-            // Create new entry
             await _leaderboardRepository.AddEntryAsync(new LeaderboardEntry
             {
                 Id = Guid.NewGuid(),
@@ -77,7 +77,7 @@ public class SubmitScoreUseCase
             });
         }
 
-        // 3. Invalidate cache for this leaderboard
+        // 3. Invalidate cache
         await _cacheService.DeleteAsync($"leaderboard:{leaderboard.Id}:top");
         await _cacheService.DeleteAsync($"leaderboard:{leaderboard.Id}:rank:{playerId}");
 
@@ -85,7 +85,7 @@ public class SubmitScoreUseCase
         var rank = await _leaderboardRepository.GetPlayerRankAsync(leaderboard.Id, playerId);
         var playerEntity = await _playerRepository.GetByIdAsync(playerId);
 
-        return new ScoreResponse
+        var response = new ScoreResponse
         {
             PlayerId = playerId,
             Username = playerEntity?.Username ?? string.Empty,
@@ -93,5 +93,13 @@ public class SubmitScoreUseCase
             Rank = rank,
             Metadata = request.Metadata
         };
+
+        // 5. Notify connected clients via SignalR
+        if (_notificationService != null)
+        {
+            await _notificationService.NotifyScoreUpdatedAsync(gameId, request.Name, response);
+        }
+
+        return response;
     }
 }
