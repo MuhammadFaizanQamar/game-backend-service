@@ -26,6 +26,12 @@ namespace GameBackend.API;
 
 public class Startup
 {
+    private bool IsTestEnvironment()
+    {
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        return env == "Testing";
+    }
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -35,6 +41,9 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        if (!IsTestEnvironment())
+            services.AddGameBackendRateLimiting();
+
         // Database
         services.AddDbContext<GameDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
@@ -214,7 +223,10 @@ public class Startup
         app.UseCors();
         app.UseRouting();
         app.UseCors();
-        app.UseRateLimiter();
+
+        if (!env.IsEnvironment("Testing"))
+            app.UseRateLimiter();
+
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseAuthentication();
