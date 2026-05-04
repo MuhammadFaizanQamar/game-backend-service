@@ -3,7 +3,8 @@
 
 A production-deployed, generic game backend API built with ASP.NET Core 8. Supports multiple games via a single configurable server — inspired by PlayFab architecture.
 
-**Live API:** https://game-backend-service-production.up.railway.app/swagger  
+**Live API (Azure):** https://game-backend-api-gdh5fjg0a0g4eqfr.centralindia-01.azurewebsites.net/swagger
+**Live API (Railway):** https://game-backend-service-production.up.railway.app/swagger
 **GitHub:** https://github.com/MuhammadFaizanQamar/game-backend-service
 
 ---
