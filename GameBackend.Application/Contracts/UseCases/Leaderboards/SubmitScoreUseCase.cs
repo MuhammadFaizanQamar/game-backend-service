@@ -1,5 +1,6 @@
 using GameBackend.Application.Contracts.Leaderboards;
 using GameBackend.Core.Entities;
+using GameBackend.Core.Events;
 using GameBackend.Core.Interfaces;
 
 namespace GameBackend.Application.UseCases.Leaderboards;
@@ -10,17 +11,20 @@ public class SubmitScoreUseCase
     private readonly IPlayerRepository _playerRepository;
     private readonly ICacheService _cacheService;
     private readonly ILeaderboardNotificationService? _notificationService;
+    private readonly IEventPublisher? _eventPublisher;
 
     public SubmitScoreUseCase(
         ILeaderboardRepository leaderboardRepository,
         IPlayerRepository playerRepository,
         ICacheService cacheService,
-        ILeaderboardNotificationService? notificationService = null)
+        ILeaderboardNotificationService? notificationService = null,
+        IEventPublisher? eventPublisher = null)
     {
         _leaderboardRepository = leaderboardRepository;
         _playerRepository = playerRepository;
         _cacheService = cacheService;
         _notificationService = notificationService;
+        _eventPublisher = eventPublisher;
     }
 
     public async Task<ScoreResponse> ExecuteAsync(string gameId, Guid playerId, SubmitScoreRequest request)
@@ -77,11 +81,7 @@ public class SubmitScoreUseCase
             });
         }
 
-        // 3. Invalidate cache
-        await _cacheService.DeleteAsync($"leaderboard:{leaderboard.Id}:top");
-        await _cacheService.DeleteAsync($"leaderboard:{leaderboard.Id}:rank:{playerId}");
-
-        // 4. Get updated rank
+        // 3. Get updated rank
         var rank = await _leaderboardRepository.GetPlayerRankAsync(leaderboard.Id, playerId);
         var playerEntity = await _playerRepository.GetByIdAsync(playerId);
 
@@ -94,11 +94,31 @@ public class SubmitScoreUseCase
             Metadata = request.Metadata
         };
 
-        // 5. Notify connected clients via SignalR
-        if (_notificationService != null)
+        // 4. Publish event to Service Bus (async — non-blocking)
+        if (_eventPublisher != null)
         {
-            await _notificationService.NotifyScoreUpdatedAsync(gameId, request.Name, response);
+            await _eventPublisher.PublishAsync("score-submitted", new ScoreSubmittedEvent
+            {
+                PlayerId = playerId,
+                Username = playerEntity?.Username ?? string.Empty,
+                GameId = gameId,
+                LeaderboardName = request.Name,
+                LeaderboardId = leaderboard.Id,
+                Score = request.Score,
+                Rank = rank,
+                SubmittedAt = DateTime.UtcNow
+            });
         }
+        else
+        {
+            // Fallback — direct cache invalidation if Service Bus not configured
+            await _cacheService.DeleteAsync($"leaderboard:{leaderboard.Id}:top");
+            await _cacheService.DeleteAsync($"leaderboard:{leaderboard.Id}:rank:{playerId}");
+        }
+
+        // 5. Notify SignalR clients
+        if (_notificationService != null)
+            await _notificationService.NotifyScoreUpdatedAsync(gameId, request.Name, response);
 
         return response;
     }

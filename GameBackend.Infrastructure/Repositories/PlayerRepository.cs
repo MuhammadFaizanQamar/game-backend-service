@@ -27,7 +27,6 @@ public class PlayerRepository : IPlayerRepository
                 .Where(x => x.Email == email)
                 .Select(x => (int)x.Role)
                 .FirstOrDefaultAsync();
-            Console.WriteLine($"Raw role value from DB: {rawRole}");
         }
 
         return player;
