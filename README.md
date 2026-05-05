@@ -25,20 +25,25 @@ Any game can plug into this backend by passing a `GameId`. The server handles:
 ## Architecture
 
 ```
-GameBackend.API           → Controllers, Middleware, Startup
+GameBackend.API           → Controllers, Middleware, Startup, Hubs
 GameBackend.Application   → Use Cases, Contracts, Validators
-GameBackend.Core          → Entities, Interfaces
-GameBackend.Infrastructure → EF Core, Repositories, JWT, BCrypt, Redis
-GameBackend.Tests         → xUnit Tests (12 passing)
+GameBackend.Core          → Entities, Interfaces, Events
+GameBackend.Infrastructure → EF Core, Repositories, JWT, BCrypt, Redis, Messaging
+GameBackend.Tests         → xUnit Unit Tests (12) + Integration Tests (6)
+GameBackend SDK           → Unity C# client SDK
 ```
 
 **Pattern:** Clean Architecture — no business logic in controllers, no database access in use cases.
 
 **Data flow:**
 ```
-Controller → UseCase → Repository → PostgreSQL
-                    ↓
-              JWT / BCrypt / Redis
+Controller → UseCase → Repository → Azure PostgreSQL
+↓
+JWT / BCrypt / Azure Redis
+↓
+Azure Service Bus → Consumer → Cache Invalidation
+↓
+SignalR → Connected Clients
 ```
 
 ---
@@ -48,12 +53,15 @@ Controller → UseCase → Repository → PostgreSQL
 | Layer | Technology |
 |---|---|
 | API Framework | ASP.NET Core 8 |
-| Database | PostgreSQL (EF Core) |
-| Cache | Redis (Upstash) |
+| Database | PostgreSQL (Azure Database for PostgreSQL) |
+| Cache | Redis (Azure Cache for Redis / Upstash) |
 | Auth | JWT + BCrypt |
+| Messaging | Azure Service Bus |
 | Validation | FluentValidation |
-| Testing | xUnit + NSubstitute + FluentAssertions |
-| Deployment | Railway + Docker |
+| Testing | xUnit + NSubstitute + FluentAssertions + Testcontainers |
+| Deployment | Azure App Service + Docker + Azure Container Registry |
+| Monitoring | Azure Application Insights |
+| Real-time | SignalR |
 
 ---
 
@@ -159,16 +167,19 @@ http://localhost:5152/swagger
 ---
 
 ## Running Tests
-```bash
 dotnet test GameBackend.Tests
-```
 
-12 tests covering auth, player profile and leaderboard use cases.
-
+18 tests — 12 unit tests covering auth, player profile and leaderboards,
+6 integration tests covering full HTTP pipeline with real PostgreSQL via Testcontainers.
 ---
 
 ## Design Decisions
 
+**Why Azure Service Bus?**
+Score submission publishes a ScoreSubmitted event to Azure Service Bus. The API returns immediately without waiting for cache invalidation. A background consumer processes the event asynchronously — decoupling API response time from downstream processing.
+
+**Why SignalR?**
+Real-time leaderboard updates pushed to all connected clients instantly when a new high score is submitted — no polling needed.
 **Why Clean Architecture?**  
 Controllers stay thin. Business logic lives in use cases. Each layer is independently testable.
 
