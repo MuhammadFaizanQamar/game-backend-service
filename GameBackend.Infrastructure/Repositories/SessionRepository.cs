@@ -37,11 +37,6 @@ public class SessionRepository : ISessionRepository
         return session;
     }
 
-    public Task<List<GameSession>> GetPlayerHistoryAsync(Guid playerId, string gameId, int limit)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<(List<GameSession> Sessions, int TotalCount)> GetPlayerHistoryAsync(
         Guid playerId, string gameId, int skip, int limit)
     {
