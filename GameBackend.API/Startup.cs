@@ -1,6 +1,8 @@
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using Azure.Messaging.ServiceBus;
+using GameBackend.Infrastructure.Messaging;
 using GameBackend.Application.UseCases.Auth;
 using GameBackend.Application.UseCases.Leaderboards;
 using GameBackend.Application.UseCases.Players;
@@ -21,6 +23,8 @@ using GameBackend.API.Middleware;
 using GameBackend.API.RateLimiting;
 using GameBackend.Application.UseCases.Admin;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
+
 
 namespace GameBackend.API;
 
@@ -42,6 +46,9 @@ public class Startup
             services.AddGameBackendRateLimiting();
         }
 
+        // Application Insights
+        services.AddApplicationInsightsTelemetry();
+
         // Database
         services.AddDbContext<GameDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
@@ -54,13 +61,34 @@ public class Startup
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
 
-        // Redis via Upstash REST API
-        var redisSettings = new RedisSettings
+        // Redis — auto-selects Upstash or Azure based on URL format
+        var redisUrl = Configuration["Redis:Url"] ?? Configuration["Redis__Url"] ?? string.Empty;
+        var redisToken = Configuration["Redis:Token"] ?? Configuration["Redis__Token"] ?? string.Empty;
+
+        if (redisUrl.StartsWith("https://"))
         {
-            Url = Configuration["Redis:Url"]!,
-            Token = Configuration["Redis:Token"]!
-        };
-        services.AddSingleton<ICacheService>(_ => new RedisCacheService(redisSettings));
+            // Upstash REST API
+            services.AddSingleton<ICacheService>(_ =>
+                new RedisCacheService_Upstash(new RedisSettings
+                {
+                    Url = redisUrl,
+                    Token = redisToken
+                }));
+        }
+        else
+        {
+            // Azure Cache for Redis
+            var redisConfig = new ConfigurationOptions
+            {
+                EndPoints = { redisUrl },
+                Password = redisToken,
+                Ssl = true,
+                AbortOnConnectFail = false
+            };
+            services.AddSingleton<IConnectionMultiplexer>(
+                ConnectionMultiplexer.Connect(redisConfig));
+            services.AddSingleton<ICacheService, RedisCacheService_Azure>();
+        }
 
         // Sessions
         services.AddScoped<ISessionRepository, SessionRepository>();
@@ -200,6 +228,15 @@ public class Startup
             if (File.Exists(xmlPath))
                 options.IncludeXmlComments(xmlPath);
         });
+
+        // Azure Service Bus
+        var serviceBusConnection = Configuration["ServiceBus:ConnectionString"];
+        if (!string.IsNullOrWhiteSpace(serviceBusConnection))
+        {
+            services.AddSingleton(new ServiceBusClient(serviceBusConnection));
+            services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>();
+            services.AddHostedService<ScoreSubmittedConsumer>();
+        }
 
         // SignalR
         services.AddSignalR();
