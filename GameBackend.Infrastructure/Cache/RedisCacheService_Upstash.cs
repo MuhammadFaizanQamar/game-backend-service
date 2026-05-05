@@ -1,16 +1,15 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using GameBackend.Core.Interfaces;
 
 namespace GameBackend.Infrastructure.Cache;
 
-public class RedisCacheService : ICacheService
+public class RedisCacheService_Upstash : RedisCacheServiceBase
 {
     private readonly HttpClient _httpClient;
     private readonly string _baseUrl;
 
-    public RedisCacheService(RedisSettings settings)
+    public RedisCacheService_Upstash(RedisSettings settings)
     {
         _baseUrl = settings.Url.TrimEnd('/');
         _httpClient = new HttpClient();
@@ -18,7 +17,7 @@ public class RedisCacheService : ICacheService
             new AuthenticationHeaderValue("Bearer", settings.Token);
     }
 
-    public async Task<string?> GetAsync(string key)
+    public override async Task<string?> GetAsync(string key)
     {
         var response = await _httpClient.GetAsync($"{_baseUrl}/get/{Uri.EscapeDataString(key)}");
         if (!response.IsSuccessStatusCode) return null;
@@ -28,14 +27,14 @@ public class RedisCacheService : ICacheService
         return result?.Result;
     }
 
-    public async Task SetAsync(string key, string value, TimeSpan expiry)
+    public override async Task SetAsync(string key, string value, TimeSpan expiry)
     {
         var seconds = (int)expiry.TotalSeconds;
         var url = $"{_baseUrl}/set/{Uri.EscapeDataString(key)}/{Uri.EscapeDataString(value)}?EX={seconds}";
         await _httpClient.GetAsync(url);
     }
 
-    public async Task DeleteAsync(string key)
+    public override async Task DeleteAsync(string key)
     {
         await _httpClient.GetAsync($"{_baseUrl}/del/{Uri.EscapeDataString(key)}");
     }
