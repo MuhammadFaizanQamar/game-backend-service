@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBackendSDK", "GameBacke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBackend.Functions", "GameBackend.Functions\GameBackend.Functions.csproj", "{7860465C-2D72-42F2-8CDC-9F38DDA8617C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Service", "Auth.Service\Auth.Service.csproj", "{A1E95D62-7DD1-4664-B581-8701F5FFA92A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,5 +51,9 @@ Global
 		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1E95D62-7DD1-4664-B581-8701F5FFA92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1E95D62-7DD1-4664-B581-8701F5FFA92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1E95D62-7DD1-4664-B581-8701F5FFA92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1E95D62-7DD1-4664-B581-8701F5FFA92A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

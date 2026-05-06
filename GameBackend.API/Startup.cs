@@ -98,10 +98,10 @@ public class Startup
         services.AddScoped<GetSessionStatsUseCase>();
 
         // Use Cases
-        services.AddScoped<RegisterPlayerUseCase>();
-        services.AddScoped<LoginUseCase>();
-        services.AddScoped<GetPlayerProfileUseCase>();
-        services.AddScoped<UpdatePlayerProfileUseCase>();
+       // services.AddScoped<RegisterPlayerUseCase>();
+        //services.AddScoped<LoginUseCase>();
+        //services.AddScoped<GetPlayerProfileUseCase>();
+        //services.AddScoped<UpdatePlayerProfileUseCase>();
 
         // Leaderboard
         services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
@@ -237,6 +237,9 @@ public class Startup
             services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>();
             services.AddHostedService<ScoreSubmittedConsumer>();
         }
+        // YARP Reverse Proxy
+        services.AddReverseProxy()
+            .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
 
         // SignalR
         services.AddSignalR();
@@ -269,6 +272,7 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapReverseProxy();
             endpoints.MapHub<LeaderboardHub>("/hubs/leaderboard");
             endpoints.Map("/", static context =>
                 context.Response.WriteAsync("GameBackend API is running"));
