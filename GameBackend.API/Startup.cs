@@ -55,6 +55,9 @@ public class Startup
 
         // Repositories
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        // Player/Profile Use Cases
+        services.AddScoped<GetPlayerProfileUseCase>();
+        services.AddScoped<UpdatePlayerProfileUseCase>();
 
         // Security
         services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -98,10 +101,14 @@ public class Startup
         services.AddScoped<GetSessionStatsUseCase>();
 
         // Use Cases
-        services.AddScoped<RegisterPlayerUseCase>();
-        services.AddScoped<LoginUseCase>();
-        services.AddScoped<GetPlayerProfileUseCase>();
-        services.AddScoped<UpdatePlayerProfileUseCase>();
+        // Re-register auth use cases for Testing environment
+        if (Environment.IsEnvironment("Testing"))
+        {
+            services.AddScoped<RegisterPlayerUseCase>();
+            services.AddScoped<LoginUseCase>();
+            services.AddScoped<RefreshTokenUseCase>();
+            services.AddScoped<LogoutUseCase>();
+        }
 
         // Leaderboard
         services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
@@ -237,6 +244,13 @@ public class Startup
             services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>();
             services.AddHostedService<ScoreSubmittedConsumer>();
         }
+        // YARP Reverse Proxy
+        // Only add YARP in non-test environments
+        if (!Environment.IsEnvironment("Testing"))
+        {
+            services.AddReverseProxy()
+                .LoadFromConfig(Configuration.GetSection("ReverseProxy"));
+        }
 
         // SignalR
         services.AddSignalR();
@@ -256,19 +270,20 @@ public class Startup
         app.UseRouting();
         app.UseCors();
         app.UseRouting();
-        app.UseCors();
 
         if (!env.IsEnvironment("Testing"))
             app.UseRateLimiter();
 
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseAuthentication();
-        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            if (!env.IsEnvironment("Testing"))
+            {
+                endpoints.MapReverseProxy();
+            }
             endpoints.MapHub<LeaderboardHub>("/hubs/leaderboard");
             endpoints.Map("/", static context =>
                 context.Response.WriteAsync("GameBackend API is running"));
