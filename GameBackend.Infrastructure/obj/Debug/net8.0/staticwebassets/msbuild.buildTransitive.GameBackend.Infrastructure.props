@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\GameBackend.Infrastructure.props" />
-</Project>
