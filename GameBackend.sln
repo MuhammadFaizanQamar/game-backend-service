@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBackend.Tests", "GameBa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBackendSDK", "GameBackendSDK\GameBackendSDK.csproj", "{CB4AC41B-82D8-4837-AB1F-62C2DC356A1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBackend.Functions", "GameBackend.Functions\GameBackend.Functions.csproj", "{7860465C-2D72-42F2-8CDC-9F38DDA8617C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,5 +45,9 @@ Global
 		{CB4AC41B-82D8-4837-AB1F-62C2DC356A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB4AC41B-82D8-4837-AB1F-62C2DC356A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB4AC41B-82D8-4837-AB1F-62C2DC356A1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7860465C-2D72-42F2-8CDC-9F38DDA8617C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
