@@ -3,6 +3,7 @@ using GameBackend.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
 using Xunit;
@@ -26,6 +27,17 @@ public class GameBackendWebFactory : WebApplicationFactory<Program>, IAsyncLifet
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
+
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            config.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ServiceBus:ConnectionString"] = null,
+                // Disable YARP routing in tests — Auth endpoints handled locally
+                ["ReverseProxy:Routes:auth-route:Match:Path"] = null,
+                ["ReverseProxy:Clusters:auth-cluster:Destinations:auth-service:Address"] = null
+            });
+        });
 
         builder.ConfigureServices(services =>
         {
